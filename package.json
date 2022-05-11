@@ -1,0 +1,26 @@
+{
+  "name": "maoc-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Arararra/maoc-bot.git"
+  },
+  "author": "Arararra",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Arararra/maoc-bot/issues"
+  },
+  "homepage": "https://github.com/Arararra/maoc-bot#readme",
+  "dependencies": {
+    "@discordjs/builders": "^0.13.0",
+    "@discordjs/rest": "^0.4.1",
+    "discord-api-types": "^0.32.1",
+    "discord.js": "^13.6.0",
+    "nodemon": "^2.0.16"
+  }
+}
