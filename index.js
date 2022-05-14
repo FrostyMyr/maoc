@@ -1,10 +1,10 @@
-const { Client, Collection } = require("discord.js");
+const { Client, Collection, WebhookClient } = require("discord.js");
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
 const fs = require("fs");
 const config = require("./config.json");
 
-const client = new Client({ intents: 3 });
+const client = new Client({ intents: 33315 });
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 const commands = [];
 
@@ -59,6 +59,33 @@ client.on("interactionCreate", async (interaction) => {
       content: "There is something wrong with your input.",
       ephemeral: true
     });
+  }
+});
+
+client.on("messageCreate", async (message) => {
+  if (message.author.bot || message.webhookId) return;
+
+  const repliedMessage = await message.fetchReference(message.reference).then((referencedMessage) => {
+      return referencedMessage;
+    }).catch((err) => {
+      return null;
+    });
+  const webhooks = await message.channel.fetchWebhooks();
+  const webhook = webhooks.find(wh => wh.token);
+  const messageContent = repliedMessage != null ? 
+    `> **${repliedMessage.author.username}** ${truncate(repliedMessage.content, 20)} [Jump](${repliedMessage.url})\n ${message.content}`
+    : message.content;
+
+  await message.delete();
+  webhook.send({
+    username: webhook.username,
+    avatarUrl: webhook.avatarUrl,
+    content: messageContent,
+    embeds: []
+  });
+
+  function truncate(text, size) {
+    return text.length > size ? text.slice(0, size).concat("...") : text;
   }
 });
 
