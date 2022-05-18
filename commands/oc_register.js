@@ -21,14 +21,15 @@ module.exports = {
     const prefix = interaction.options.getString("prefix");
 
     const user = interaction.user;
-    const userData = JSON.parse(fs.readFileSync(`users_data/${user.id}.json`));
-    const newUserData = Object.assign({}, userData.ocs, {
-      [prefix]: {
-        "name": name,
+    const userOcs = JSON.parse(fs.readFileSync(`./user_ocs.json`));
+    const newUserOcs = Object.assign({}, userOcs, {
+      [name]: {
+        "prefix": prefix,
+        "creator": user.id
       }
     });
 
-    await fs.writeFileSync(`users_data/${user.id}.json`, JSON.stringify(newUserData, null, 2));
+    await fs.writeFileSync(`./user_ocs.json`, JSON.stringify(newUserOcs, null, 2));
 
     interaction.reply({
       content: `**${name}** has successfully saved to database.`,

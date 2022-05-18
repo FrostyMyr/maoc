@@ -65,28 +65,13 @@ client.on("interactionCreate", async (interaction) => {
 client.on("messageCreate", async (message) => {
   if (message.author.bot || message.webhookId) return;
 
-  const repliedMessage = await message.fetchReference(message.reference).then((referencedMessage) => {
-      return referencedMessage;
-    }).catch((err) => {
-      return null;
-    });
-  const webhooks = await message.channel.fetchWebhooks();
-  const webhook = webhooks.find(wh => wh.token);
-  const messageContent = repliedMessage != null ? 
-    `> **${repliedMessage.author.username}** ${truncate(repliedMessage.content, 20)} [Jump](${repliedMessage.url})\n ${message.content}`
-    : message.content;
-
-  await message.delete();
-  webhook.send({
-    username: webhook.username,
-    avatarUrl: webhook.avatarUrl,
-    content: messageContent,
-    embeds: []
+  const command = client.commands.get("oc");
+  const userOcs = JSON.parse(fs.readFileSync("./user_ocs.json"));
+  const userOc = Object.entries(userOcs).find((oc) => {
+    return oc[1].prefix == message.content.split(":")[0] && oc[1].creator == message.author.id
   });
 
-  function truncate(text, size) {
-    return text.length > size ? text.slice(0, size).concat("...") : text;
-  }
+  if (userOc) await command.execute(message, client);
 });
 
 client.login(config["DISCORD_TOKEN"]);
