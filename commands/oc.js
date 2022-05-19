@@ -41,19 +41,20 @@ module.exports = {
       `> **${repliedInteraction.author.username}** ${truncate(repliedInteraction.content, 20)} [Jump](${repliedInteraction.url})\n ${message}`
       : message;
 
-    if (interaction.content) {
-      await interaction.delete();
-    } else {
-      await interaction.deferReply();
-      await interaction.deleteReply();
-    }
+    if (userOc) {
+      if (interaction.content) {
+        await interaction.delete();
+      } else {
+        await interaction.deferReply();
+        await interaction.deleteReply();
+      }
 
-    webhook.send({
-      username: userOc[0],
-      avatarUrl: webhook.avatarUrl,
-      content: interactionContent,
-      embeds: []
-    });
+      webhook.send({
+        username: userOc[0],
+        avatarUrl: webhook.avatarUrl,
+        content: interactionContent
+      });
+    }
 
     function truncate(text, size) {
       return text.length > size ? text.slice(0, size).concat("...") : text;

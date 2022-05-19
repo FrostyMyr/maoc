@@ -4,7 +4,7 @@ const fs = require("fs");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("oc_register")
-    .setDescription("Store or update your data in database so it will be easy for everyone.")
+    .setDescription("Register your OC so you can use it.")
     .addStringOption((option) => 
       option
         .setName("name")

@@ -66,12 +66,8 @@ client.on("messageCreate", async (message) => {
   if (message.author.bot || message.webhookId) return;
 
   const command = client.commands.get("oc");
-  const userOcs = JSON.parse(fs.readFileSync("./user_ocs.json"));
-  const userOc = Object.entries(userOcs).find((oc) => {
-    return oc[1].prefix == message.content.split(":")[0] && oc[1].creator == message.author.id
-  });
 
-  if (userOc) await command.execute(message, client);
+  await command.execute(message, client);
 });
 
 client.login(config["DISCORD_TOKEN"]);
