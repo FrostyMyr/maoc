@@ -20,7 +20,9 @@ module.exports = {
     const user = interaction.user || interaction.author;
     const userOcs = JSON.parse(fs.readFileSync("./user_ocs.json"));
     const webhooks = await interaction.channel.fetchWebhooks();
-    const webhook = webhooks.find(wh => wh.owner.id == client.user.id);
+    const webhook = webhooks.find(wh => wh.owner.id == client.user.id) || interaction.channel.createWebhook("MaOC", {
+      avatar: "https://i.imgur.com/AfFp7pu.png"
+    });
     let prefix, message, repliedInteraction;
 
     if (interaction.content) {

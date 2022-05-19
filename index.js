@@ -1,4 +1,4 @@
-const { Client, Collection, WebhookClient } = require("discord.js");
+const { Client, Collection } = require("discord.js");
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
 const fs = require("fs");
