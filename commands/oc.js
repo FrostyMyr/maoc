@@ -56,6 +56,11 @@ module.exports = {
         avatarUrl: webhook.avatarUrl,
         content: interactionContent
       });
+    } else if (interaction.options) {
+      await interaction.reply({
+        content: "There is no OC with that prefix.",
+        ephemeral: true
+      });
     }
 
     function truncate(text, size) {
