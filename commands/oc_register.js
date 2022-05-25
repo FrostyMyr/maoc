@@ -13,7 +13,7 @@ module.exports = {
     )
     .addStringOption((option) => 
       option.setName("prefix")
-        .setDescription("Your OC prefix to use this OC.")
+        .setDescription("Your OC prefix used to call this OC.")
         .setRequired(true)
     ),
   async execute(interaction) {
@@ -22,10 +22,26 @@ module.exports = {
 
     const user = interaction.user;
     const userOcs = JSON.parse(fs.readFileSync(`./user_ocs.json`));
+    const searchUserOcs = Object.entries(userOcs).find(u => user.id) || [user.id, {}];
+
+    if (Object.entries(searchUserOcs[1]).filter(o => o[0] == prefix).length > 0) {
+      interaction.reply({
+        content: `Prefix **${prefix}** is already exist`,
+        ephemeral: true
+      });
+
+      return;
+    }
+
     const newUserOcs = Object.assign({}, userOcs, {
-      [name]: {
-        "prefix": prefix,
-        "creator": user.id
+      [searchUserOcs[0]]: {
+        ...searchUserOcs[1],
+        [prefix]: {
+          "name": name,
+          "image": "",
+          "description": "",
+          "personality": ""
+        }
       }
     });
 

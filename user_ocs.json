@@ -1,14 +1,22 @@
 {
-  "Ara": {
-    "prefix": "ara",
-    "creator": "425175286833741824"
-  },
-  "Truno Pambudi": {
-    "prefix": "budi",
-    "creator": "425175286833741824"
-  },
-  "Myrica": {
-    "prefix": "myrica",
-    "creator": "425175286833741824"
+  "425175286833741824": {
+    "myr": {
+      "name": "Myrica",
+      "image": "",
+      "description": "",
+      "personality": ""
+    },
+    "bam": {
+      "name": "Bambang",
+      "image": "",
+      "description": "",
+      "personality": ""
+    },
+    "ara": {
+      "name": "Ara",
+      "image": "",
+      "description": "",
+      "personality": ""
+    }
   }
 }
