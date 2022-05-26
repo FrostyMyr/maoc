@@ -53,7 +53,7 @@ module.exports = {
 
       webhook.send({
         username: userOc.name,
-        avatarUrl: userOc.avatarUrl,
+        avatarURL: userOc.avatar,
         content: interactionContent
       });
     } else if (interaction.options) {

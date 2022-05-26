@@ -3,7 +3,7 @@ const fs = require("fs");
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("oc_register")
+    .setName("register_oc")
     .setDescription("Register your OC so you can use it.")
     .addStringOption((option) => 
       option
@@ -24,9 +24,9 @@ module.exports = {
     const userOcs = JSON.parse(fs.readFileSync(`./user_ocs.json`));
     const searchUserOcs = Object.entries(userOcs).find(u => u[0] == user.id) || [user.id, {}];
 
-    if (Object.entries(searchUserOcs[1]).filter(o => o[0] == prefix).length > 0) {
+    if (searchUserOcs[1][prefix]) {
       interaction.reply({
-        content: `Prefix **${prefix}** is already exist`,
+        content: `Prefix **${prefix}** is already exist.`,
         ephemeral: true
       });
 
@@ -38,9 +38,8 @@ module.exports = {
         ...searchUserOcs[1],
         [prefix]: {
           "name": name,
-          "avatarUrl": "",
-          "description": "",
-          "personality": ""
+          "avatar": "",
+          "description": ""
         }
       }
     });
