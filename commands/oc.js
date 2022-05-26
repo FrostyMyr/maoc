@@ -41,7 +41,7 @@ module.exports = {
       `> **${repliedInteraction.author.username}** ${truncate(repliedInteraction.content, 20)} [Jump](${repliedInteraction.url})\n ${message}`
       : message;
 
-    if (userOc[1][prefix]) {
+    if (!!userOc) {
       if (interaction.content) {
         await interaction.delete();
       } else {
