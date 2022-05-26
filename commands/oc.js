@@ -36,12 +36,12 @@ module.exports = {
       message = interaction.options.getString("message");
     }
 
-    const userOc = Object.entries(userOcs).find(u => u[0] == user.id)[1][prefix];
+    const userOc = Object.entries(userOcs).find(u => u[0] == user.id);
     const interactionContent = repliedInteraction != null ? 
       `> **${repliedInteraction.author.username}** ${truncate(repliedInteraction.content, 20)} [Jump](${repliedInteraction.url})\n ${message}`
       : message;
 
-    if (userOc) {
+    if (userOc[1][prefix]) {
       if (interaction.content) {
         await interaction.delete();
       } else {
@@ -50,8 +50,8 @@ module.exports = {
       }
 
       webhook.send({
-        username: userOc.name,
-        avatarURL: userOc.avatar,
+        username: userOc[1][prefix].name,
+        avatarURL: userOc[1][prefix].avatar,
         content: interactionContent
       });
     } else if (interaction.options) {
