@@ -22,7 +22,7 @@ module.exports = {
 
     const user = interaction.user;
     const userOcs = JSON.parse(fs.readFileSync(`./user_ocs.json`));
-    const searchUserOcs = Object.entries(userOcs).find(u => user.id) || [user.id, {}];
+    const searchUserOcs = Object.entries(userOcs).find(u => u[0] == user.id) || [user.id, {}];
 
     if (Object.entries(searchUserOcs[1]).filter(o => o[0] == prefix).length > 0) {
       interaction.reply({
@@ -38,7 +38,7 @@ module.exports = {
         ...searchUserOcs[1],
         [prefix]: {
           "name": name,
-          "image": "",
+          "avatarUrl": "",
           "description": "",
           "personality": ""
         }

@@ -38,7 +38,7 @@ module.exports = {
       message = interaction.options.getString("message");
     }
 
-    const userOc = Object.entries(userOcs).find(oc => oc[1].prefix == prefix && oc[1].creator == user.id);
+    const userOc = Object.entries(userOcs).find(u => u[0] == user.id)[1][prefix];
     const interactionContent = repliedInteraction != null ? 
       `> **${repliedInteraction.author.username}** ${truncate(repliedInteraction.content, 20)} [Jump](${repliedInteraction.url})\n ${message}`
       : message;
@@ -52,8 +52,8 @@ module.exports = {
       }
 
       webhook.send({
-        username: userOc[0],
-        avatarUrl: webhook.avatarUrl,
+        username: userOc.name,
+        avatarUrl: userOc.avatarUrl,
         content: interactionContent
       });
     } else if (interaction.options) {
