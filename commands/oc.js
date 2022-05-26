@@ -17,10 +17,13 @@ module.exports = {
         .setRequired(true)
     ),
   async execute(interaction, client) {
+    await interaction.channel.fetchWebhooks().then((webhook) => {
+      if (!webhook.find(wh => wh.owner.id == client.user.id)) interaction.channel.createWebhook("MaOC");
+    });
+
     const user = interaction.user || interaction.author;
     const userOcs = JSON.parse(fs.readFileSync("./user_ocs.json"));
-    const webhooks = await interaction.channel.fetchWebhooks();
-    const webhook = webhooks ? webhooks.find(wh => wh.owner.id == client.user.id) : interaction.channel.createWebhook("MaOC");
+    const webhook = await interaction.channel.fetchWebhooks().then(webhook => webhook.find(wh => wh.owner.id == client.user.id));
     let prefix, message, repliedInteraction;
 
     if (interaction.content) {
@@ -41,7 +44,7 @@ module.exports = {
       `> **${repliedInteraction.author.username}** ${truncate(repliedInteraction.content, 20)} [Jump](${repliedInteraction.url})\n ${message}`
       : message;
 
-    if (!!userOc) {
+    if (!!userOc && !!userOc[1][prefix]) {
       if (interaction.content) {
         await interaction.delete();
       } else {
@@ -50,8 +53,8 @@ module.exports = {
       }
 
       webhook.send({
-        username: userOc[1][prefix].name,
-        avatarURL: userOc[1][prefix].avatar,
+        username: userOc[1][prefix]["name"],
+        avatarURL: userOc[1][prefix]["avatar"],
         content: interactionContent
       });
     } else if (interaction.options) {
