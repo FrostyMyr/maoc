@@ -31,8 +31,8 @@ module.exports = {
     const user = interaction.user;
     const userOcs = JSON.parse(fs.readFileSync(`./user_ocs.json`));
     const searchUserOcs = Object.entries(userOcs).find(u => u[0] == user.id);
-
-    if (!searchUserOcs[1][prefix]) {
+    
+    if (!searchUserOcs || !searchUserOcs[1][prefix]) {
       interaction.reply({
         content: `There is no OC with **${prefix}** as prefix.`,
         ephemeral: true
