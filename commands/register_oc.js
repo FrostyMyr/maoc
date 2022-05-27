@@ -16,7 +16,7 @@ module.exports = {
         .setDescription("Your OC prefix used to call this OC.")
         .setRequired(true)
     ),
-  async execute(interaction) {
+  async execute(interaction, client) {
     const name = interaction.options.getString("name");
     const prefix = interaction.options.getString("prefix");
 
@@ -38,8 +38,8 @@ module.exports = {
         ...searchUserOcs[1],
         [prefix]: {
           "name": name,
-          "avatar": "",
-          "description": ""
+          "avatar": client.user.defaultAvatarURL,
+          "description": "Empty"
         }
       }
     });

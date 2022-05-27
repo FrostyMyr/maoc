@@ -27,8 +27,10 @@ module.exports = {
     }
 
     const embed = new MessageEmbed()
+      .setColor('#0099ff')
       .setAuthor({ name: client.user.username, iconURL: client.user.defaultAvatarURL })
-      .setDescription("Press the button to show OC's detail.");
+      .setDescription("Press the button to show OC's detail.")
+      .setFooter({ text: "=-=-=-=-=-=-=-=-=- showing  list -=-=-=-=-=-=-=-=-=" });
     Object.entries(searchUserOcs[1]).forEach((o) => {
       embed.addField(o[0], o[1]["name"], true);
     });
@@ -56,12 +58,13 @@ module.exports = {
     const userOc = Object.entries(userOcs).find(u => u[0] == user.id)[1][prefix];
 
     const embed = new MessageEmbed()
+      .setColor('#0099ff')
       .setAuthor({ name: client.user.username, iconURL: client.user.defaultAvatarURL })
-      .setDescription(`Showing **${userOc.name}**'s detail.`)
-      .setImage(userOc.avatar);
+      .setThumbnail(userOc.avatar || client.user.defaultAvatarURL)
+      .setFooter({ text: "=-=-=-=-=-=-| showing detail |-=-=-=-=-=-=" });
     embed.addField("Prefix", prefix, true);
     embed.addField("Name", userOc.name, true);
-    embed.addField("Description", userOc.description || "empty", false);
+    embed.addField("Description", userOc.description || "Empty", false);
 
     await interaction.update({
       embeds: [embed]
