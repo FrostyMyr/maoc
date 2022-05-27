@@ -7,6 +7,12 @@ module.exports = {
     .setName("list_oc")
     .setDescription("Edit your OC data such as avatar."),
   async execute(interaction, client) {
+    if (interaction.isButton()) {
+      this.showDetail(interaction, client);
+
+      return;
+    }
+
     const user = interaction.user;
     const userOcs = JSON.parse(fs.readFileSync(`./user_ocs.json`));
     const searchUserOcs = Object.entries(userOcs).find(u => u[0] == user.id);
@@ -30,17 +36,35 @@ module.exports = {
     Object.entries(searchUserOcs[1]).forEach((o) => {
       buttons.addComponents(
         new MessageButton()
-          .setCustomId(o[0])
+          .setCustomId(`${interaction.commandName}[-]${o[0]}`)
           .setLabel(o[1]["name"])
           .setStyle("PRIMARY")
       );
     });
 
     interaction.reply({
-      content: `Test`,
       embeds: [embed],
       components: [buttons],
       ephemeral: true
+    });
+  },
+  async showDetail(interaction, client) {
+    const prefix = interaction.customId.split("[-]")[1];
+
+    const user = interaction.user;
+    const userOcs = JSON.parse(fs.readFileSync(`./user_ocs.json`));
+    const userOc = Object.entries(userOcs).find(u => u[0] == user.id)[1][prefix];
+
+    const embed = new MessageEmbed()
+      .setAuthor({ name: client.user.username, iconURL: client.user.defaultAvatarURL })
+      .setDescription(`Showing **${userOc.name}**'s detail.`)
+      .setImage(userOc.avatar);
+    embed.addField("Prefix", prefix, true);
+    embed.addField("Name", userOc.name, true);
+    embed.addField("Description", userOc.description || "empty", false);
+
+    await interaction.update({
+      embeds: [embed]
     });
   }
 }

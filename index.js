@@ -5,7 +5,7 @@ const fs = require("fs");
 const config = require("./config.json");
 
 const client = new Client({ intents: 33315 });
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+const commandFiles = fs.readdirSync("./commands").filter(file => file.endsWith(".js"));
 const commands = [];
 
 client.commands = new Collection();
@@ -44,9 +44,15 @@ client.once("ready", () => {
 });
 
 client.on("interactionCreate", async (interaction) => {
-  if (!interaction.isCommand()) return;
+  if (!(interaction.isCommand() || interaction.isButton())) return;
 
-  const command = client.commands.get(interaction.commandName);
+  let command;
+
+  if (interaction.isCommand()) {
+    command = client.commands.get(interaction.commandName);
+  } else if (interaction.isButton()) {
+    command = client.commands.get(interaction.customId.split("[-]")[0]);
+  }
 
   if (!command) return;
 
