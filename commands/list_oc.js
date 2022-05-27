@@ -11,6 +11,15 @@ module.exports = {
     const userOcs = JSON.parse(fs.readFileSync(`./user_ocs.json`));
     const searchUserOcs = Object.entries(userOcs).find(u => u[0] == user.id);
 
+    if (!searchUserOcs) {
+      interaction.reply({
+        content: `You haven't registered any OC yet.`,
+        ephemeral: true
+      });
+
+      return;
+    }
+
     const embed = new MessageEmbed()
       .setAuthor({ name: client.user.username, iconURL: client.user.defaultAvatarURL })
       .setDescription("Press the button to show OC's detail.");
