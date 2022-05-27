@@ -5,7 +5,7 @@ const fs = require("fs");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("list_oc")
-    .setDescription("Edit your OC data such as avatar."),
+    .setDescription("Show list of your OCs."),
   async execute(interaction, client) {
     if (interaction.isButton()) {
       this.showDetail(interaction, client);
@@ -31,8 +31,8 @@ module.exports = {
       .setAuthor({ name: client.user.username, iconURL: client.user.defaultAvatarURL })
       .setDescription("Press the button to show OC's detail.")
       .setFooter({ text: "=-=-=-=-=-=-=-=-=- showing  list -=-=-=-=-=-=-=-=-=" });
-    Object.entries(searchUserOcs[1]).forEach((o) => {
-      embed.addField(o[0], o[1]["name"], true);
+    Object.entries(searchUserOcs[1]).forEach((o, index) => {
+      embed.addField(`${index+1}. ${o[0]}`, o[1]["name"], true);
     });
     const buttons = new MessageActionRow();
     Object.entries(searchUserOcs[1]).forEach((o) => {
