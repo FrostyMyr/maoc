@@ -28,6 +28,7 @@ module.exports = {
 
     if (interaction.content) {
       prefix = interaction.content.split(":")[0];
+      if ([prefix].length) return;
       message = interaction.content.slice(interaction.content.indexOf(":") + 1).trim();
       repliedInteraction = await interaction.fetchReference(interaction.reference).then((referencedInteraction) => {
           return referencedInteraction;
