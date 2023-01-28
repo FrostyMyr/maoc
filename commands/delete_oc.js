@@ -37,8 +37,7 @@ module.exports = {
     });
 
     delete searchUserOcs[1][prefix];
-    if (!!userOcs[user.id].length == 0) delete userOcs[user.id];
-
+    if (userOcs[user.id].length == 0) delete userOcs[user.id];
     await fs.writeFileSync(`./user_ocs.json`, JSON.stringify(userOcs, null, 2));
   }
 }
