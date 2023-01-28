@@ -13,7 +13,7 @@ const { exec } = require('child_process');
 const fs = require("fs");
 const config = require("./config.json");
 
-const client = new Client({ intents: 1841 });
+const client = new Client({ intents: 34609 });
 const commandFiles = fs.readdirSync("./commands").filter(file => file.endsWith(".js"));
 const commands = [];
 
