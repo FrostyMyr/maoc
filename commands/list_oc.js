@@ -1,4 +1,4 @@
-const { MessageActionRow, MessageButton, MessageEmbed } = require("discord.js");
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const fs = require("fs");
 
@@ -26,21 +26,25 @@ module.exports = {
       return;
     }
 
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor('#0099ff')
       .setAuthor({ name: client.user.username, iconURL: client.user.defaultAvatarURL })
       .setDescription("Press the button to show OC's detail.")
       .setFooter({ text: "=-=-=-=-=-=-=-=-=- showing  list -=-=-=-=-=-=-=-=-=" });
+
+    let ocList = [];
     Object.entries(searchUserOcs[1]).forEach((o, index) => {
-      embed.addField(`${index+1}. ${o[0]}`, o[1]["name"], true);
+      ocList = ocList.concat({ name: `${index+1}. ${o[0]}`, value: o[1]["name"], inline: true });
     });
-    const buttons = new MessageActionRow();
+    embed.addFields(ocList);
+
+    const buttons = new ActionRowBuilder();
     Object.entries(searchUserOcs[1]).forEach((o) => {
       buttons.addComponents(
-        new MessageButton()
+        new ButtonBuilder()
           .setCustomId(`${interaction.commandName}[-]${o[0]}`)
           .setLabel(o[1]["name"])
-          .setStyle("PRIMARY")
+          .setStyle(ButtonStyle.Primary),
       );
     });
 
@@ -57,14 +61,16 @@ module.exports = {
     const userOcs = JSON.parse(fs.readFileSync(`./user_ocs.json`));
     const userOc = Object.entries(userOcs).find(u => u[0] == user.id)[1][prefix];
 
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor('#0099ff')
       .setAuthor({ name: client.user.username, iconURL: client.user.defaultAvatarURL })
       .setThumbnail(userOc.avatar || client.user.defaultAvatarURL)
       .setFooter({ text: "=-=-=-=-=-=-| showing detail |-=-=-=-=-=-=" });
-    embed.addField("Prefix", prefix, true);
-    embed.addField("Name", userOc.name, true);
-    embed.addField("Description", userOc.description || "Empty", false);
+    embed.addFields([
+      { name: "Prefix", value: prefix, inline: true },
+      { name: "Name", value: userOc.name, inline: true },
+      { name: "Description", value: userOc.description || "Empty", inline: false }, 
+    ]);
 
     await interaction.update({
       embeds: [embed]
