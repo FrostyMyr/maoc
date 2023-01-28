@@ -18,7 +18,7 @@ module.exports = {
     ),
   async execute(interaction, client) {
     await interaction.channel.fetchWebhooks().then((webhook) => {
-      if (!webhook.find(wh => wh.owner.id == client.user.id)) interaction.channel.createWebhook("MaOC");
+      if (!webhook.find(wh => wh.owner.id == client.user.id)) interaction.channel.createWebhook({ name: "MaOC" });
     });
 
     const user = interaction.user || interaction.author;
