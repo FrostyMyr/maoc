@@ -24,6 +24,15 @@ module.exports = {
     const userOcs = JSON.parse(fs.readFileSync(`./user_ocs.json`));
     const searchUserOcs = Object.entries(userOcs).find(u => u[0] == user.id) || [user.id, {}];
 
+    if (searchUserOcs.length > 1) {
+      interaction.reply({
+        content: "You already have a character.",
+        ephemeral: true
+      });
+
+      return;
+    }
+
     if (searchUserOcs[1][prefix]) {
       interaction.reply({
         content: `Prefix **${prefix}** is already exist.`,
