@@ -1,10 +1,19 @@
+// Keep alive
+// const express = require('express');
+// const app = express();
+// const port = 3000;
+
+// app.get('/', (req, res) => res.send('Hello World!'));
+// app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`));
+
 const { Client, Collection } = require("discord.js");
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
+const { exec } = require('child_process');
 const fs = require("fs");
 const config = require("./config.json");
 
-const client = new Client({ intents: 33315 });
+const client = new Client({ intents: 1841 });
 const commandFiles = fs.readdirSync("./commands").filter(file => file.endsWith(".js"));
 const commands = [];
 
@@ -16,7 +25,7 @@ for (const file of commandFiles) {
   client.commands.set(command.data.name, command);
 }
 
-client.once("ready", () => {
+client.once("ready", async () => {
   console.log("MaOC is online!");
 
   const clientId = client.user.id;
@@ -24,23 +33,14 @@ client.once("ready", () => {
     version: "9"
   }).setToken(config["DISCORD_TOKEN"]);
 
-  (async () => {
-    try {
-      if (config["ENVIRONMENT"] == "production") {
-        await rest.put(Routes.applicationCommands(clientId), {
-          body: commands
-        });
-        console.log("Successfully registered commands globally!");
-      } else {
-        await rest.put(Routes.applicationGuildCommands(clientId, config["GUILD_ID"]), {
-          body: commands
-        });
-        console.log("Successfully registered commands locally!");
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  })();
+  try {
+    await rest.put(Routes.applicationCommands(clientId), {
+      body: commands
+    });
+    console.log("Successfully registered commands globally!");
+  } catch (err) {
+    console.error(err);
+  }
 });
 
 client.on("interactionCreate", async (interaction) => {
@@ -60,7 +60,6 @@ client.on("interactionCreate", async (interaction) => {
     await command.execute(interaction, client);
   } catch (err) {
     if (err) console.error(err);
-
     await interaction.reply({
       content: "There is something wrong with your input.",
       ephemeral: true
@@ -70,10 +69,14 @@ client.on("interactionCreate", async (interaction) => {
 
 client.on("messageCreate", async (message) => {
   if (message.author.bot || message.webhookId) return;
-
   const command = client.commands.get("oc");
-
   await command.execute(message, client);
 });
 
-client.login(config["DISCORD_TOKEN"]);
+(async () => {
+  try {
+    client.login(config['DISCORD_TOKEN']);
+  } catch (err) {
+    exec("kill 1");
+  }
+})();
