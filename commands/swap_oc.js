@@ -40,6 +40,14 @@ module.exports = {
     const searchUserOcs = Object.entries(userOcs).find(u => u[0] == user.id);
     const searchTargetOcs = Object.entries(userOcs).find(u => u[0] == target.id);
 
+    if (!searchTargetOcs) {
+      interaction.reply({
+        content: "Your target didn't register any character yet.",
+        ephemeral: true
+      });
+      return;
+    }
+
     if (interaction.isButton() || useItem) {
       if (useItem && !swapRemote) {
         interaction.reply({
