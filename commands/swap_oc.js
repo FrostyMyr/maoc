@@ -23,7 +23,7 @@ module.exports = {
     const { page, totalPages, items } = await unbClient.getInventoryItems(interaction.guild.id, interaction.user.id, { 
       sort: ['item_id'], page: 1 
     });
-    const swapRemote = items.find(item => item.name == 'Throwing Knife');
+    const swapRemote = items.find(item => item.name == 'Swap Remote');
 
     if (interaction.isButton()) {
       const swappers = interaction.message.content.split('<@').map(id => id.split('>')[0]).filter(id => id != '');

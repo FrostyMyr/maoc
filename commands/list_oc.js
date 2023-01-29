@@ -33,17 +33,17 @@ module.exports = {
       .setFooter({ text: "=-=-=-=-=-=-=-=-=- showing  list -=-=-=-=-=-=-=-=-=" });
 
     let ocList = [];
-    Object.entries(searchUserOcs[1]).forEach((o, index) => {
-      ocList = ocList.concat({ name: `${index+1}. ${o[0]}`, value: o[1]["name"], inline: true });
+    Object.entries(searchUserOcs[1]).forEach((oc, index) => {
+      ocList = ocList.concat({ name: `${index+1}. ${oc[0]}`, value: oc[1]["name"], inline: true });
     });
     embed.addFields(ocList);
 
     const buttons = new ActionRowBuilder();
-    Object.entries(searchUserOcs[1]).forEach((o) => {
+    Object.entries(searchUserOcs[1]).forEach((oc) => {
       buttons.addComponents(
         new ButtonBuilder()
-          .setCustomId(`${interaction.commandName}[-]${o[0]}`)
-          .setLabel(o[1]["name"])
+          .setCustomId(`${interaction.commandName}[-]${oc[0]}`)
+          .setLabel(oc[1]["name"])
           .setStyle(ButtonStyle.Primary),
       );
     });
