@@ -22,9 +22,9 @@ module.exports = {
 
     const user = interaction.user;
     const userOcs = JSON.parse(fs.readFileSync(`./user_ocs.json`));
-    const searchUserOcs = Object.entries(userOcs).find(u => u[0] == user.id) || [user.id, {}];
+    const searchUserOcs = Object.entries(userOcs).find(u => u[0] == user.id) || { [user.id]: {} };
 
-    if (searchUserOcs.length > 1) {
+    if (searchUserOcs[user.id].length > 1) {
       interaction.reply({
         content: "You already have a character.",
         ephemeral: true
@@ -33,7 +33,7 @@ module.exports = {
       return;
     }
 
-    if (searchUserOcs[1][prefix]) {
+    if (searchUserOcs[user.id][prefix]) {
       interaction.reply({
         content: `Prefix **${prefix}** is already exist.`,
         ephemeral: true
@@ -43,8 +43,7 @@ module.exports = {
     }
 
     const newUserOcs = Object.assign({}, userOcs, {
-      [searchUserOcs[0]]: {
-        ...searchUserOcs[1],
+      [user.id]: {
         [prefix]: {
           "name": name,
           "avatar": client.user.defaultAvatarURL,
