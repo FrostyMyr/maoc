@@ -56,7 +56,8 @@ module.exports = {
       webhook.send({
         username: userOc[1][prefix]["name"],
         avatarURL: userOc[1][prefix]["avatar"],
-        content: interactionContent
+        content: interactionContent,
+        files: interaction.attachments.map(file => file.attachment)
       });
     } else if (interaction.options) {
       await interaction.reply({

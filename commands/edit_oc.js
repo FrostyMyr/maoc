@@ -1,4 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
+const { Client } = require('unb-api');
+const unbClient = new Client(require("../config.json")['UNB_TOKEN']);
 const fs = require("fs");
 
 module.exports = {
@@ -26,8 +28,20 @@ module.exports = {
         .setRequired(false)
     ),
   async execute(interaction) {
+    const { page, totalPages, items } = await unbClient.getInventoryItems(interaction.guild.id, interaction.user.id, { 
+      sort: ['item_id'], page: 1 
+    });
+    const magicPen = items.find(item => item.name == 'Magic Pen');
+    if (!magicPen) {
+      interaction.reply({
+        content: `You need **Magic Pen** to edit your character.`,
+        ephemeral: true
+      });
+
+      return;
+    };
+
     const prefix = interaction.options.getString("prefix");
-    
     const user = interaction.user;
     const userOcs = JSON.parse(fs.readFileSync(`./user_ocs.json`));
     const searchUserOcs = Object.entries(userOcs).find(u => u[0] == user.id);
@@ -57,9 +71,10 @@ module.exports = {
     });
 
     await fs.writeFileSync(`./user_ocs.json`, JSON.stringify(newUserOcs, null, 2));
+    await unbClient.removeInventoryItem(interaction.guild.id, interaction.user.id, magicPen.itemId, 1);
 
     interaction.reply({
-      content: `**${name}**'s data has been updated.`,
+      content: `**${name}**'s data has been updated.\n1 **Magic Pen** has been used.`,
       ephemeral: true
     });
   }
