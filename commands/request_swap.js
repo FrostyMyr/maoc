@@ -95,6 +95,10 @@ module.exports = {
     });
     await fs.writeFileSync(`./swap.json`, JSON.stringify(newSwapJson, null, 2));
 
+    await interaction.channel.fetchWebhooks().then((webhook) => {
+      if (!webhook.find(wh => wh.owner.id == client.user.id)) message.channel.createWebhook({ name: "GSBot" });
+    });
+
     interaction.reply({
       content: `They both are swapped now.`,
     });

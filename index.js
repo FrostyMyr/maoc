@@ -4,6 +4,7 @@ const { Routes } = require("discord-api-types/v9");
 const { exec } = require('child_process');
 const fs = require("fs");
 const config = require("./config.json");
+const proxy = require('./proxy.js');
 
 const client = new Client({ intents: 36401 });
 const commandFiles = fs.readdirSync("./commands").filter(file => file.endsWith(".js"));
@@ -66,26 +67,7 @@ client.on("interactionCreate", async (interaction) => {
 // Proxy chat if userId is in swap.json
 client.on("messageCreate", async (message) => {
   if (message.author.bot || message.webhookId) return;
-
-  const swapJson = JSON.parse(fs.readFileSync(`./swap.json`));
-  const userSwapJson = Object.entries(swapJson).find(u => u[0] == message.author.id);
-
-  if (userSwapJson == undefined) return;
-
-  await message.channel.fetchWebhooks().then((webhook) => {
-    if (!webhook.find(wh => wh.owner.id == client.user.id)) message.channel.createWebhook({ name: "GSBot" });
-  });
-  const webhook = await message.channel.fetchWebhooks().then(webhook => webhook.find(wh => wh.owner.id == client.user.id));
-  await message.delete();
-
-  webhook.send({
-    username: userSwapJson.name,
-    avatarURL: userSwapJson.avatar,
-    content: message.content,
-    files: message.attachments.map(file => file.attachment)
-  });
-
-  return
+  proxy.chat(client, message);
 });
 
 // ACtivate bot
