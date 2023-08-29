@@ -25,8 +25,7 @@ module.exports = {
       user = interaction.user;
     }
 
-    const swapJson = JSON.parse(fs.readFileSync(`./swap.json`));
-    const newSwapJson = Object.assign({}, swapJson, {
+    const newSwapJson = {
       [user.id]: {
         "name": user.globalName,
         "avatar": user.displayAvatarURL(),
@@ -37,8 +36,8 @@ module.exports = {
         "avatar": target.displayAvatarURL(),
         "partnerId": target.id
       }
-    });
-    await fs.writeFileSync(`./swap.json`, JSON.stringify(newSwapJson, null, 2));
+    };
+    await fs.writeFileSync(`./temp-swap-${user.id}.json`, JSON.stringify(newSwapJson, null, 2));
 
     const confirmButton = new ActionRowBuilder();
     confirmButton.addComponents(
@@ -74,11 +73,7 @@ module.exports = {
       }
 
       if (interaction.customId.split("[-]")[1].split(interaction.user.id)[0] == 'n') {
-        const swapJson = JSON.parse(fs.readFileSync(`./swap.json`));
-        delete swapJson[user];
-        delete swapJson[target];
-        await fs.writeFileSync(`./swap.json`, JSON.stringify(swapJson, null, 2));
-
+        await fs.unlinkSync(`./temp-swap-${user}.json`);
         await interaction.reply({
           content: `Swap cancelled.`,
         });
@@ -90,9 +85,11 @@ module.exports = {
     }
 
     const swapJson = JSON.parse(fs.readFileSync(`./swap.json`));
-    const userJson = Object.entries(swapJson).find(u => u[0] == user);
-    const targetJson = Object.entries(swapJson).find(u => u[0] == target);
-    const newSwapJson = Object.assign({}, swapJson, {
+    var newSwapJson = JSON.parse(fs.readFileSync(`./temp-swap-${user}.json`));
+    const userJson = Object.entries(newSwapJson).find(u => u[0] == user);
+    const targetJson = Object.entries(newSwapJson).find(u => u[0] == target);
+
+    newSwapJson = Object.assign({}, swapJson, {
       [user]: {
         "name": targetJson[1].name,
         "avatar": targetJson[1].avatar,
@@ -104,7 +101,9 @@ module.exports = {
         "partnerId": userJson[1].partnerId
       }
     });
+
     await fs.writeFileSync(`./swap.json`, JSON.stringify(newSwapJson, null, 2));
+    await fs.unlinkSync(`./temp-swap-${user}.json`);
 
     interaction.reply({
       content: `They both are swapped now.`,

@@ -33,6 +33,10 @@ client.once("ready", async () => {
       body: commands
     });
     await fs.writeFileSync(`./swap.json`, '{}');
+    await fs.readdirSync("./").filter(file => file.startsWith("temp-swap")).forEach(file => {
+      fs.unlinkSync(file);
+    });
+
     console.log("Successfully registered commands globally!");
   } catch (err) {
     console.error(err);
