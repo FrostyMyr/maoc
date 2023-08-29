@@ -55,7 +55,7 @@ module.exports = {
       );
 
     interaction.channel.fetchWebhooks().then((webhook) => {
-      if (!webhook.find(wh => wh.owner.id == client.user.id)) message.channel.createWebhook({ name: "GSBot" });
+      if (!webhook.find(wh => wh.owner.id == client.user.id)) interaction.channel.createWebhook({ name: "GSBot" });
     });
 
     interaction.reply({

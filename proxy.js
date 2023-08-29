@@ -7,7 +7,7 @@ function chat(client, message) {
 
     if (userSwapJson == undefined) return;
 
-    message.delete();
+    await message.delete();
     const webhook = await message.channel.fetchWebhooks().then(webhook => webhook.find(wh => wh.owner.id == client.user.id));
 
     webhook.send({
