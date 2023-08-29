@@ -79,11 +79,14 @@ module.exports = {
         delete swapJson[target];
         await fs.writeFileSync(`./swap.json`, JSON.stringify(swapJson, null, 2));
 
-        interaction.reply({
-          content: `Swapped cancelled.`,
+        await interaction.reply({
+          content: `Swap cancelled.`,
         });
+        await interaction.message.delete();
         return;
       }
+
+      await interaction.message.delete();
     }
 
     const swapJson = JSON.parse(fs.readFileSync(`./swap.json`));
