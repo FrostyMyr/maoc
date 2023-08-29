@@ -8,7 +8,7 @@ module.exports = {
     .setDescription("Start a great shift."),
   async execute(interaction, client) {
     const user = interaction.user;
-    const accShiftJson = Object.values(JSON.parse(fs.readFileSync(`./acc_shift.json`)));
+    const accShiftJson = Object.entries(JSON.parse(fs.readFileSync(`./acc_shift.json`)));
     const shuffledAccShiftJson = derange(accShiftJson);
     
     if (accShiftJson.length == 0) {
@@ -18,9 +18,9 @@ module.exports = {
       return;
     }
 
-    accShiftJson.forEach(async (rawData, index) => {
-      const data = Object.entries(rawData)[0];
-      const newData = Object.entries(shuffledAccShiftJson[index])[0];
+    await accShiftJson.forEach(async (rawData, index) => {
+      const data = rawData;
+      const newData = shuffledAccShiftJson[index];
       
       await client.users.send(data[0], `Here is your new body.`);
       await client.users.send(data[0], `${newData[1]['email']} \n${newData[1]['pass']} \n${newData[1]['auth']}`);

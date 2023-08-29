@@ -29,22 +29,19 @@ module.exports = {
     const user = interaction.user;
 
     const accShiftJson = JSON.parse(fs.readFileSync(`./acc_shift.json`));
-    const newAccShiftJson = Object.assign({}, accShiftJson, [
-      {
-        [user.id]: {
-          "email": email,
-          "pass": pass,
-          "auth": auth
-        }
+    const newAccShiftJson = Object.assign({}, accShiftJson, {
+      [user.id]: {
+        "email": email,
+        "pass": pass,
+        "auth": auth
       }
-    ]);
-
+    });
     await fs.writeFileSync(`./acc_shift.json`, JSON.stringify(newAccShiftJson, null, 2));
 
     interaction.reply({
       content: 'You joined great shift session.',
       ephemeral: true
     });
-    interaction.channel.send(`Someone joined great shift session.`);
+    interaction.channel.send(`Someone joined great shift session. \n${Object.keys(newAccShiftJson).length} people ready to swap.`);
   }
 }
