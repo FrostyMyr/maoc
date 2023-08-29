@@ -32,6 +32,7 @@ client.once("ready", async () => {
     await rest.put(Routes.applicationCommands(clientId), {
       body: commands
     });
+    await fs.writeFileSync(`./swap.json`, '{}');
     console.log("Successfully registered commands globally!");
   } catch (err) {
     console.error(err);

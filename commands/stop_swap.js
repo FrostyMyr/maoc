@@ -10,7 +10,9 @@ module.exports = {
     const user = interaction.user;
 
     const swapJson = JSON.parse(fs.readFileSync(`./swap.json`));
+    const partnerSwapJson = Object.entries(swapJson).find(u => u[1].partnerId == user.id);
     delete swapJson[user.id];
+    delete swapJson[partnerSwapJson[0]];
     await fs.writeFileSync(`./swap.json`, JSON.stringify(swapJson, null, 2));
 
     interaction.reply({

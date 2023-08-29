@@ -29,11 +29,13 @@ module.exports = {
     const newSwapJson = Object.assign({}, swapJson, {
       [user.id]: {
         "name": user.globalName,
-        "avatar": user.displayAvatarURL()
+        "avatar": user.displayAvatarURL(),
+        "partnerId": user.id
       },
       [target.id]: {
         "name": target.globalName,
-        "avatar": target.displayAvatarURL()
+        "avatar": target.displayAvatarURL(),
+        "partnerId": target.id
       }
     });
     await fs.writeFileSync(`./swap.json`, JSON.stringify(newSwapJson, null, 2));
@@ -51,6 +53,10 @@ module.exports = {
           .setLabel("No")
           .setStyle(ButtonStyle.Danger)
       );
+
+    interaction.channel.fetchWebhooks().then((webhook) => {
+      if (!webhook.find(wh => wh.owner.id == client.user.id)) message.channel.createWebhook({ name: "GSBot" });
+    });
 
     interaction.reply({
       components: [confirmButton],
@@ -86,18 +92,16 @@ module.exports = {
     const newSwapJson = Object.assign({}, swapJson, {
       [user]: {
         "name": targetJson[1].name,
-        "avatar": targetJson[1].avatar
+        "avatar": targetJson[1].avatar,
+        "partnerId": targetJson[1].partnerId
       },
       [target]: {
         "name": userJson[1].name,
-        "avatar": userJson[1].avatar
+        "avatar": userJson[1].avatar,
+        "partnerId": userJson[1].partnerId
       }
     });
     await fs.writeFileSync(`./swap.json`, JSON.stringify(newSwapJson, null, 2));
-
-    await interaction.channel.fetchWebhooks().then((webhook) => {
-      if (!webhook.find(wh => wh.owner.id == client.user.id)) message.channel.createWebhook({ name: "GSBot" });
-    });
 
     interaction.reply({
       content: `They both are swapped now.`,
