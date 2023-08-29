@@ -33,6 +33,7 @@ client.once("ready", async () => {
       body: commands
     });
     await fs.writeFileSync(`./swap.json`, '{}');
+    await fs.writeFileSync(`./acc_shift.json`, '{}');
     await fs.readdirSync("./").filter(file => file.startsWith("temp-swap")).forEach(file => {
       fs.unlinkSync(file);
     });
