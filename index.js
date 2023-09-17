@@ -84,3 +84,5 @@ client.on("messageCreate", async (message) => {
     exec("kill 1");
   }
 })();
+
+// Test new laptop
